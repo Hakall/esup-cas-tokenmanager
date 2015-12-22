@@ -8,7 +8,7 @@ _V2 has just been released_
 ### Cas Token Manager configuration
 
 Documentation for installing these projet is availaible
-* [CAS Addon Ticket Management](https://www.esup-portail.org/wiki/display/ESPADHERENT/Manuel+d%27installation+%3A+CAS+addon+ticket+management)
+* [CAS Addon Ticket Management](https://www.esup-portail.org/wiki/pages/viewpage.action?title=Manuel+d%27installation+%3A+CAS+addon+ticket+management&spaceKey=ESPADHERENT)
 * [CAS Ticket Management Webapp](https://www.esup-portail.org/wiki/display/ESPADHERENT/Manuel+d%27installation+%3A+Ticket+Management+webapp)
 
 ### Warning
