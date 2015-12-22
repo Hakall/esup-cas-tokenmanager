@@ -17,11 +17,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@RequestMapping("/registry")
 public class RegistryResource {
 
 	@Autowired
-	private CentralAuthenticationService cas;
+	private CentralAuthenticationService centralAuthenticationService;
 
 	@Autowired
 	private TicketRegistryUtils utils;
@@ -31,7 +30,7 @@ public class RegistryResource {
 	 *
 	 * @return Ticket list for a given user 
 	 */
-	@RequestMapping(value = "/{user}/", method = RequestMethod.GET)
+	@RequestMapping(value = "/{user}", method = RequestMethod.GET)
 	public @ResponseBody List<JsonTicket> getListForUser(@PathVariable String user) {
 
 		return this.utils.listTicketToJson(user);
@@ -42,12 +41,12 @@ public class RegistryResource {
 	 * :.+ in the RequestMapping annotation prevents Spring
 	 * from removing the suffig pattern of our tickets
 	 *
-	 * @return empty JSON. CAS server always return `true` a ticket is deleted
+	 * @return empty JSON. centralAuthenticationService server always return `true` a ticket is deleted
 	 */
-	@RequestMapping(value="/ticket/{ticketId:.+}/", method=RequestMethod.DELETE)
+	@RequestMapping(value="/ticket/{ticketId:.+}", method=RequestMethod.DELETE)
 	public @ResponseBody String deleteTicket(@PathVariable String ticketId) {
 
-		this.cas.destroyTicketGrantingTicket(ticketId);
+		this.centralAuthenticationService.destroyTicketGrantingTicket(ticketId);
 		return "{}";
 	}
 
@@ -56,7 +55,7 @@ public class RegistryResource {
 	 *
 	 * @return Ticket Owner in JSON format
 	 */
-	@RequestMapping(value="/owner/{ticketId:.+}/", method = RequestMethod.GET)
+	@RequestMapping(value="/owner/{ticketId:.+}", method = RequestMethod.GET)
 	public @ResponseBody TicketOwner getTicketOwner(@PathVariable String ticketId) {
 
 		String userId = this.utils.ticketBelongTo(ticketId);
@@ -68,14 +67,15 @@ public class RegistryResource {
 	 *
 	 * @return empty JSON, see deleteTicket method.
 	 */
-	@RequestMapping(value="/userTickets/{user}/", method=RequestMethod.DELETE)
+	@RequestMapping(value="/userTickets/{user}", method=RequestMethod.DELETE)
 	public @ResponseBody String deleteAllForUser(@PathVariable String user) {
 
 		List<Ticket> userTickets = this.utils.listTicketForUser(user);
 		for(Ticket ticket : userTickets) {
-			this.cas.destroyTicketGrantingTicket(ticket.getId());
+			this.centralAuthenticationService.destroyTicketGrantingTicket(ticket.getId());
 		}
 		return "{}";
 	}
+
 
 }

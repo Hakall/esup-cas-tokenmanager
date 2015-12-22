@@ -12,9 +12,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
+import org.apache.log4j.Logger;
+
 @Controller
 @RequestMapping("/admin")
 public class AdminInterfaceController {
+
+	final static Logger LOGGER = Logger.getLogger(AdminInterfaceController.class);
 
 	@Value("${server.api}")
 	private String CAS_REST_API;
@@ -24,7 +28,7 @@ public class AdminInterfaceController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String printIndex(ModelMap model, @RequestParam(required = false) boolean delete) {
-
+		LOGGER.info("Access to admin-ticket-manager");
 		model.addAttribute("command", new TicketOwner());
 		model.addAttribute("delete", delete);
 		model.addAttribute("pageTitle", "admin.title");

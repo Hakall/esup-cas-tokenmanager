@@ -47,7 +47,7 @@
 				</form:label>
 			
 				<spring:message code="admin.form.placeholder" var="adminFormPlaceholder"/>
-				<form:input path="owner" placeholder="${adminFormPlaceHolder}" class="form-control" required/>
+				<form:input path="owner" placeholder="${adminFormPlaceHolder}" class="form-control" required="true"/>
 			</div>
 			<button type="submit" class="btn btn-danger">
 				<spring:message code="admin.form.submit"/>
@@ -55,5 +55,5 @@
 		</fieldset>
 				
 	</form:form>
-
+<!--  -->
 <jsp:directive.include file="includes/footer.jsp" />

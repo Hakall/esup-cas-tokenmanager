@@ -20,8 +20,10 @@ public class IPLocatorTag extends TagSupport {
 
 	/** The ip address. */
 	private String ipAddress;
+	private String apiKey="8076df1c06fd90bb0cc7f849a6453c72aa3fee636b7968a9a0ecaaa4358c512c";
 
-	private final String API_GEOIP_URL = "http://freegeoip.net/json/{ipAddress}";
+	private final String API_GEOIP_URL = "http://api.ipinfodb.com/v3/ip-city/?key="+apiKey+"&ip={ipAddress}&format=json";
+	// private final String API_GEOIP_URL = "http://freegeoip.net/json/{ipAddress}";
 
 	/**
 	 * This tag will geocode the given IP address based on the REST API
@@ -37,7 +39,8 @@ public class IPLocatorTag extends TagSupport {
 			IPInformation ipInfo = this.getIPInformation(this.ipAddress);
 
 			// FreeGeoIP returns RD if IP address is private (ex : 127.0.0.1, 192.168.1.1, ...)
-			if(ipInfo.getCountryCode().equalsIgnoreCase("RD")) {
+			if(ipInfo.getCountryCode().equalsIgnoreCase("-")) {
+			// if(ipInfo.getCountryCode().equalsIgnoreCase("RD")) {
 				out.print(this.ipAddress);
 			} else {
 				String location = ipInfo.getCity() + ", " + ipInfo.getCountryCode();

@@ -1,0 +1,106 @@
+2015-11-03 15:10:51,921 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 15:10:54,384 INFO [org.jasig.cas.util.AutowiringSchedulerFactoryBean] - Starting Quartz Scheduler now
+2015-11-03 15:11:12,257 INFO [org.jasig.cas.ticket.registry.support.DefaultTicketRegistryCleaner] - Beginning ticket cleanup.
+2015-11-03 15:11:12,262 INFO [org.jasig.cas.ticket.registry.support.DefaultTicketRegistryCleaner] - 0 tickets found to be removed.
+2015-11-03 15:11:12,263 INFO [org.jasig.cas.ticket.registry.support.DefaultTicketRegistryCleaner] - Finished ticket cleanup.
+2015-11-03 15:12:52,472 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 15:12:52,473 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 15:14:52,460 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 15:14:52,461 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 15:16:52,459 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 15:16:52,460 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 15:17:26,489 INFO [org.jasig.cas.util.AutowiringSchedulerFactoryBean] - Shutting down Quartz Scheduler
+2015-11-03 15:17:50,016 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 15:17:52,625 INFO [org.jasig.cas.util.AutowiringSchedulerFactoryBean] - Starting Quartz Scheduler now
+2015-11-03 15:18:10,226 INFO [org.jasig.cas.ticket.registry.support.DefaultTicketRegistryCleaner] - Beginning ticket cleanup.
+2015-11-03 15:18:10,229 INFO [org.jasig.cas.ticket.registry.support.DefaultTicketRegistryCleaner] - 0 tickets found to be removed.
+2015-11-03 15:18:10,229 INFO [org.jasig.cas.ticket.registry.support.DefaultTicketRegistryCleaner] - Finished ticket cleanup.
+2015-11-03 15:18:33,064 INFO [org.jasig.cas.web.flow.InitialFlowSetupAction] - Setting path for cookies to: /cas/
+2015-11-03 15:18:33,064 INFO [org.jasig.cas.web.flow.InitialFlowSetupAction] - Setting path for cookies to: /cas/
+2015-11-03 15:18:33,112 INFO [com.github.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: TGT-1-0tYBn1dOf9dl4elBMiIoCACVJNIZLCSa2Y3BZOHxWfnQ0wBRwh-tequila
+ACTION: TICKET_GRANTING_TICKET_DESTROYED
+APPLICATION: CAS
+WHEN: Tue Nov 03 15:18:33 CET 2015
+CLIENT IP ADDRESS: 10.1.11.48
+SERVER IP ADDRESS: 10.1.11.48
+=============================================================
+
+
+2015-11-03 15:18:38,331 INFO [org.jasig.cas.authentication.PolicyBasedAuthenticationManager] - LdapAuthenticationHandler successfully authenticated john+password
+2015-11-03 15:18:38,334 INFO [org.jasig.cas.authentication.PolicyBasedAuthenticationManager] - Authenticated john with credentials [john+password].
+2015-11-03 15:18:38,335 INFO [com.github.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: supplied credentials: [john+password]
+ACTION: AUTHENTICATION_SUCCESS
+APPLICATION: CAS
+WHEN: Tue Nov 03 15:18:38 CET 2015
+CLIENT IP ADDRESS: 10.1.11.48
+SERVER IP ADDRESS: 10.1.11.48
+=============================================================
+
+
+2015-11-03 15:18:38,338 INFO [com.github.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: TGT-1-Wxvly0hw6XEdfsZAigr5BsUogXhX2feMQ1KjQBrdg5hHgrWXPV-tequila
+ACTION: TICKET_GRANTING_TICKET_CREATED
+APPLICATION: CAS
+WHEN: Tue Nov 03 15:18:38 CET 2015
+CLIENT IP ADDRESS: 10.1.11.48
+SERVER IP ADDRESS: 10.1.11.48
+=============================================================
+
+
+2015-11-03 15:19:50,552 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 15:19:50,553 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 15:21:50,550 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 15:21:50,551 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 15:23:50,550 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 15:23:50,550 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 15:25:50,550 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 15:25:50,551 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 15:27:50,550 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 15:27:50,551 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 15:29:50,551 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 15:29:50,551 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 15:31:50,550 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 15:31:50,550 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 15:33:50,551 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 15:33:50,551 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 15:35:50,550 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 15:35:50,550 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 15:37:50,550 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 15:37:50,550 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 15:39:50,548 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 15:39:50,548 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 15:41:50,550 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 15:41:50,550 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 15:43:50,548 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 15:43:50,549 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 15:45:50,550 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 15:45:50,550 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 15:47:50,552 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 15:47:50,553 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 15:49:50,551 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 15:49:50,552 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 15:51:50,549 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 15:51:50,549 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 15:53:50,549 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 15:53:50,549 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 15:55:50,549 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 15:55:50,549 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 15:57:50,550 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 15:57:50,551 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 15:59:50,550 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 15:59:50,550 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 16:01:50,549 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 16:01:50,549 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 16:05:50,550 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 16:05:50,550 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 16:07:50,551 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Reloading registered services.
+2015-11-03 16:07:50,551 INFO [org.jasig.cas.services.DefaultServicesManagerImpl] - Loaded 1 services.
+2015-11-03 16:09:28,308 INFO [org.jasig.cas.util.AutowiringSchedulerFactoryBean] - Shutting down Quartz Scheduler

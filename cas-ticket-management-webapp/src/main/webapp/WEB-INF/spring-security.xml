@@ -21,6 +21,7 @@
 	   
 	    <sec:intercept-url access="isAuthenticated()" pattern="/user"/>
 	    <sec:intercept-url access="isAuthenticated() and hasRole('${security.adminRole}')" pattern="/admin"/>
+	    <!-- <sec:intercept-url access="isAuthenticated()" pattern="/admin"/> -->
 	</sec:http>
 	
 	<bean id="notAuthorizedEntryPoint"
@@ -95,5 +96,6 @@
 		  p:loginUrl="${server.loginUrl}" 
 		  p:serviceProperties-ref="serviceProperties" 
 		  class="org.springframework.security.cas.web.CasAuthenticationEntryPoint"/>
+
 
 </beans>

@@ -4,25 +4,29 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 public class IPInformation {
 
-	@JsonProperty("ip")
+	// @JsonProperty("ip")
+	@JsonProperty("ipAddress")
 	private String ip;
 
-	@JsonProperty("country_code")
+	// @JsonProperty("country_code")
+	@JsonProperty("countryCode")
 	private String countryCode;
 
-	@JsonProperty("country_name")
+	@JsonProperty("countryName")
 	private String countryName;
 
-	@JsonProperty("region_code")
-	private String regionCode;
+	// @JsonProperty("region_code")
+	// private String regionCode;
 
-	@JsonProperty("region_name")
+	@JsonProperty("regionName")
 	private String regionName;
 
-	@JsonProperty("city")
+	// @JsonProperty("city")
+	@JsonProperty("cityName")
 	private String city;
 
-	@JsonProperty("zipcode")
+	// @JsonProperty("zipcode")
+	@JsonProperty("zipCode")
 	private String zipCode;
 
 	@JsonProperty("latitude")
@@ -31,12 +35,21 @@ public class IPInformation {
 	@JsonProperty("longitude")
 	private String longitude;
 
-	@JsonProperty("metro_code")
-	private String metroCode;
+	// @JsonProperty("metro_code")
+	// private String metroCode;
 
-	@JsonProperty("area_code")
-	private String areaCode;
+	// @JsonProperty("area_code")
+	// private String areaCode;
 
+	@JsonProperty("statusCode")
+	private String statusCode;
+
+	@JsonProperty("statusMessage")
+	private String statusMessage;
+
+	@JsonProperty("timeZone")
+	private String timeZone;
+	
 	public String getIp() {
 		return this.ip;
 	}
@@ -61,13 +74,13 @@ public class IPInformation {
 		this.countryName = countryName;
 	}
 
-	public String getRegionCode() {
-		return this.regionCode;
-	}
+	// public String getRegionCode() {
+	// 	return this.regionCode;
+	// }
 
-	public void setRegionCode(String regionCode) {
-		this.regionCode = regionCode;
-	}
+	// public void setRegionCode(String regionCode) {
+	// 	this.regionCode = regionCode;
+	// }
 
 	public String getRegionName() {
 		return this.regionName;
@@ -109,20 +122,44 @@ public class IPInformation {
 		this.longitude = longitude;
 	}
 
-	public String getMetroCode() {
-		return this.metroCode;
+	// public String getMetroCode() {
+	// 	return this.metroCode;
+	// }
+
+	// public void setMetroCode(String metroCode) {
+	// 	this.metroCode = metroCode;
+	// }
+
+	// public String getAreaCode() {
+	// 	return this.areaCode;
+	// }
+
+	// public void setAreaCode(String areaCode) {
+	// 	this.areaCode = areaCode;
+	// }
+
+	public String getStatusCode() {
+		return this.statusCode;
 	}
 
-	public void setMetroCode(String metroCode) {
-		this.metroCode = metroCode;
+	public void setStatusCode(String statusCode) {
+		this.statusCode = statusCode;
+	}
+	
+	public String getStatusMessage() {
+		return this.statusMessage;
 	}
 
-	public String getAreaCode() {
-		return this.areaCode;
+	public void setStatusMessage(String statusMessage) {
+		this.statusMessage = statusMessage;
 	}
 
-	public void setAreaCode(String areaCode) {
-		this.areaCode = areaCode;
+	public String getTimeZone() {
+		return this.timeZone;
+	}
+
+	public void setTimeZone(String timeZone) {
+		this.timeZone = timeZone;
 	}
 
 }
