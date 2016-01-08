@@ -15,6 +15,7 @@
 		<spring:message code="user.title"/>
 	</title>
 	<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+	<link href="<c:url value="/resources/css/token-manager.css" />" rel="stylesheet">
 </head>
 <body>
 	<section class="container">
