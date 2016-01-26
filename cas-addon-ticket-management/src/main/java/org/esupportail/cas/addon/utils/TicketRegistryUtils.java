@@ -93,4 +93,27 @@ public class TicketRegistryUtils {
 		return "";
 	}
 	
+	public List<String> listOfUsers() {
+
+		List<String> users = new ArrayList<String>();
+		try {
+
+			final Collection<Ticket> tickets = this.ticketRegistry.getTickets();
+			for(final Ticket ticket : tickets) {
+
+					if(ticket instanceof TicketGrantingTicket) {
+
+						TicketGrantingTicket tgt = (TicketGrantingTicket) ticket;
+						if(!users.contains(tgt.getAuthentication().getPrincipal().getId()))
+							users.add(tgt.getAuthentication().getPrincipal().getId());
+					}
+			}
+			return users;
+
+		} catch (final UnsupportedOperationException e) {
+			e.printStackTrace();
+		}
+
+		return new ArrayList<String>();
+	}
 }

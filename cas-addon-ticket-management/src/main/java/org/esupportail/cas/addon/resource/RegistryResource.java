@@ -37,6 +37,17 @@ public class RegistryResource {
 	}
 
 	/**
+	 * Rest method to get all users.
+	 *
+	 * @return String list of user names 
+	 */
+	@RequestMapping(value = "/users", method = RequestMethod.GET)
+	public @ResponseBody List<String> getListOfUsers() {
+
+		return this.utils.listOfUsers();
+	}
+
+	/**
 	 * Rest Method to delete a ticket from the ticket registry
 	 * :.+ in the RequestMapping annotation prevents Spring
 	 * from removing the suffig pattern of our tickets
