@@ -1,5 +1,6 @@
 package org.esupportail.cas.addon.controller;
 
+import java.util.List;
 import org.esupportail.cas.addon.model.TicketOwner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +33,14 @@ public class AdminInterfaceController {
 		model.addAttribute("command", new TicketOwner());
 		model.addAttribute("delete", delete);
 		model.addAttribute("pageTitle", "admin.title");
+
+		LOGGER.info("test getUsers");
+		List<String> users = this.restTemplate.getForObject(this.CAS_REST_API + "/users", List.class);
+		for(String user : users) {
+			LOGGER.info(user);
+		}
+
+		model.addAttribute("users", users);
 		return "adminIndex";
 	}
 
