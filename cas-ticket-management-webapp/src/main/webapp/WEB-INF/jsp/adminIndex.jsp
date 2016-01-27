@@ -58,7 +58,7 @@
 							<p>${user}</p>
 						</td>
 						<td>
-							<button class="btn btn-default">
+							<button class="btn btn-default" onclick="showTickets('${user}');" id="${user}ShowBtn">
 								<spring:message code="admin.form.submit.show"/>
 							</button>
 						</td>
@@ -68,6 +68,11 @@
 								<spring:message code="admin.form.submit.delete"/>
 							</button>
 							</form:form>
+						</td>
+					</tr>
+					<tr class="userTickets hide" id="${user}Tickets">
+						<td colspan="3">
+							<jsp:directive.include file="includes/ticketsList.jsp" />	
 						</td>
 					</tr>
 					</c:forEach>

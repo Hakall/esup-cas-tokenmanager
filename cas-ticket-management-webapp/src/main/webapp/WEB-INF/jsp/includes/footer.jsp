@@ -2,6 +2,20 @@
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 	<script type="text/javascript">
+		var strings = new Array();
+		strings['admin.form.submit.hide'] = "<spring:message code='admin.form.submit.hide' javaScriptEscape='true' />";
+		strings['admin.form.submit.show'] = "<spring:message code='admin.form.submit.show' javaScriptEscape='true' />";
+		function showTickets(id){
+			if(document.getElementById(id+'Tickets').classList.contains("hide")){
+				$('#'+id+'Tickets').removeClass('hide');
+				$('#'+id+'ShowBtn').html(strings['admin.form.submit.hide']);
+				console.log("get user tickets...");	
+			}else{
+				$('#'+id+'Tickets').addClass('hide');
+				$('#'+id+'ShowBtn').html(strings['admin.form.submit.show']);
+			}
+			
+		}
 		window.onload=function(e) {
 			parent.postMessage(getDocumentHeight(), "*"); 
 
