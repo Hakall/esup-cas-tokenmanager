@@ -36,7 +36,7 @@ public class UserInterfaceController {
 	@Value("${ip.geolocation}")
 	private boolean ACTIVATE_IP_GEOLOCATION;
 
-	@Value("${ticket.nbToDisplay.perPage}")
+	@Value("${user.ticket.nbToDisplay.perPage}")
 	private int nbToDisplay;
 
 	@Autowired
@@ -48,7 +48,6 @@ public class UserInterfaceController {
 
 		LOGGER.info("Access to ticket-manager");
 		JsonTicket[] listTicket = this.restTemplate.getForObject(this.CAS_REST_API + "/{user}/", JsonTicket[].class, this.getCurrentUser());
-		LOGGER.info("this.getCurrentUser:"+this.getCurrentUser().toString());
 		int pageNumber = (int) Math.floor( listTicket.length / this.nbToDisplay );
 		if(page == null || page == 0) {
 			page = 0;
@@ -96,8 +95,6 @@ public class UserInterfaceController {
 
 	private String getCurrentUser() {
 		LdapUserDetailsImpl user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		LOGGER.info("user.getAuth ="+user.getAuthorities().toString());
-
 		String currentUser = user.getUsername();
 		return currentUser;
 	}
