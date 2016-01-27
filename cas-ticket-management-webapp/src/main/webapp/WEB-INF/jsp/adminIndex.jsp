@@ -58,7 +58,7 @@
 							<p>${user.key}</p>
 						</td>
 						<td>
-							<button class="btn btn-default" onclick="showTickets('${user.key}');" id="${user}ShowBtn">
+							<button class="btn btn-default" onclick="showTickets('${user.key}');" id="${user.key}ShowBtn">
 								<spring:message code="admin.form.submit.show"/>
 							</button>
 						</td>
@@ -153,6 +153,24 @@
 			</table>
 		</c:otherwise>
 		</c:choose>
+					<ul class="pagination">
+						<c:forEach var="i" begin="1" end="${pageNumber + 1}">
+							<c:url value="/admin" var="paginatorUrl">
+								<c:param name="page" value="${i}"/>
+							</c:url>
+							<c:choose>
+								<c:when test="${i==(currentPage+1)}">
+									<c:set var="activeClass" value="class=\"active\""/>
+								</c:when>
+								<c:otherwise>
+									<c:set var="activeClass" value=""/>
+								</c:otherwise>
+							</c:choose>
+							<li ${activeClass}>
+								<a href="${paginatorUrl}">${i}</a>
+							</li>
+						</c:forEach>
+					</ul>
 	</fieldset>
 	<form:form method="post" action="admin/deleteAll" role="form">
 		
