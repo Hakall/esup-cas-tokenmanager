@@ -1,6 +1,8 @@
 package org.esupportail.cas.addon.service;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.TreeMap;
 
 import org.esupportail.cas.addon.utils.TicketRegistryUtils;
 import org.esupportail.cas.addon.model.JsonTicket;
@@ -42,9 +44,14 @@ public class RegistryResource {
 	 * @return String list of user names 
 	 */
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
-	public @ResponseBody List<String> getListOfUsers() {
-
-		return this.utils.listOfUsers();
+	public @ResponseBody TreeMap getListOfUsers() {
+		TreeMap tm = new TreeMap();
+		List<String> users = new ArrayList<String>();
+		users = this.utils.listOfUsers();
+		for(String user : users ){
+			tm.put(user, this.utils.listTicketToJson(user));
+		}
+		return tm;
 	}
 
 	/**
