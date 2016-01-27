@@ -55,24 +55,97 @@
 					<c:forEach var="user" items="${users}" varStatus="status">
 					<tr>
 						<td>
-							<p>${user}</p>
+							<p>${user.key}</p>
 						</td>
 						<td>
-							<button class="btn btn-default" onclick="showTickets('${user}');" id="${user}ShowBtn">
+							<button class="btn btn-default" onclick="showTickets('${user.key}');" id="${user}ShowBtn">
 								<spring:message code="admin.form.submit.show"/>
 							</button>
 						</td>
 						<td>
-							<form:form method="post" action="admin/deleteAll?owner=${user}" role="form">
+							<form:form method="post" action="admin/deleteAll?owner=${user.key}" role="form">
 							<button type="submit" class="btn btn-danger">
 								<spring:message code="admin.form.submit.delete"/>
 							</button>
 							</form:form>
 						</td>
 					</tr>
-					<tr class="userTickets hide" id="${user}Tickets">
-						<td colspan="3">
-							<jsp:directive.include file="includes/ticketsList.jsp" />	
+					<tr class="userTickets hide" id="${user.key}Tickets">
+						<td colspan="3" class="ticketsList">
+							<table class="table table-responsive table-striped table-hover">
+								<thead>
+									<tr>
+										<th>
+											<spring:message code="user.table.device"/>
+										</th>
+										<th>
+											<spring:message code="user.table.creationDate"/>
+										</th>
+										<th>
+											<spring:message code="user.table.expirationDate"/>
+										</th>
+										<th>
+											<spring:message code="user.table.spot"/>
+										</th>
+										<th>
+											<spring:message code="user.table.action"/>
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:forEach var="ticket" items="${user.value}" varStatus="status">
+									<tr>
+										<td>
+											<cas:uaDetector userAgent="${ticket.authenticationAttributes.userAgent}"/>
+										</td>
+										<td>
+											<jsp:useBean id="creationTime" class="java.util.Date" />
+											<jsp:setProperty name="creationTime" property="time" value="${ticket.creationTime}" />
+											<fmt:formatDate value="${creationTime}" type="both" />
+										</td>
+										<td>							
+											<c:choose>
+												<c:when test="${ticket.authenticationAttributes['org.jasig.cas.authentication.principal.REMEMBER_ME'] == true}">
+													
+													<fmt:parseNumber var="expirationPolicy" 
+																	 integerOnly="true" 
+																	 type="number" 
+																	 value="${rememberMeExpirationPolicyInSeconds}" />
+												</c:when>
+												<c:when test="${ticket.authenticationAttributes['org.jasig.cas.authentication.principal.REMEMBER_ME'] == false}">
+													
+													<fmt:parseNumber var="expirationPolicy" 
+																	 integerOnly="true" 
+																	 type="number" 
+																	 value="${expirationPolicyInSeconds}" />
+												</c:when>
+												<c:otherwise>
+													
+													<fmt:parseNumber var="expirationPolicy" 
+																	 integerOnly="true" 
+																	 type="number" 
+																	 value="${expirationPolicyInSeconds}" />
+												</c:otherwise>
+											</c:choose>
+											<cas:expirationDate creationDate="${creationTime}" expirationPolicy="${expirationPolicy}" var="expirationDate"/>
+											<fmt:formatDate value="${expirationDate}" type="date"/>
+										</td>
+										<td>
+											<c:if test="${activateIpGeolocation}">
+												<cas:ipLocator ipAddress="${ticket.authenticationAttributes.ipAddress}"/>
+											</c:if>
+											( <cas:timeConverter time="${ticket.lastTimeUsed}"/> )
+										</td>
+										<td>
+											<c:url value="/admin/delete/${ticket.id}" var="revokeUrl"/>
+											<a href="${revokeUrl}" class="btn btn-danger">
+												<spring:message code="user.table.revoke"/>
+											</a>
+										</td>
+									</tr>
+									</c:forEach>
+								</tbody>
+							</table>
 						</td>
 					</tr>
 					</c:forEach>

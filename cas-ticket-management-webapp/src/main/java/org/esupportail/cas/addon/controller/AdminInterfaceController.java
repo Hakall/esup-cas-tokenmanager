@@ -1,6 +1,7 @@
 package org.esupportail.cas.addon.controller;
 
-import java.util.List;
+import java.util.TreeMap;
+
 import org.esupportail.cas.addon.model.TicketOwner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +26,15 @@ public class AdminInterfaceController {
 	@Value("${server.api}")
 	private String CAS_REST_API;
 
+	@Value("${cas.ticket.expirationPolicy}")
+	private long EXPIRATION_POLICY;
+
+	@Value("${cas.ticket.rememberMeExpirationPolicy}")
+	private long REMEMBER_ME_EXPIRATION_POLICY;
+
+	@Value("${ip.geolocation}")
+	private boolean ACTIVATE_IP_GEOLOCATION;
+
 	@Autowired
 	private RestTemplate restTemplate;
 
@@ -33,14 +44,14 @@ public class AdminInterfaceController {
 		model.addAttribute("command", new TicketOwner());
 		model.addAttribute("delete", delete);
 		model.addAttribute("pageTitle", "admin.title");
+		model.addAttribute("expirationPolicyInSeconds", this.EXPIRATION_POLICY);
+		model.addAttribute("rememberMeExpirationPolicyInSeconds", this.REMEMBER_ME_EXPIRATION_POLICY);
+		model.addAttribute("activateIpGeolocation", this.ACTIVATE_IP_GEOLOCATION);
 
-		LOGGER.info("test getUsers");
-		List<String> users = this.restTemplate.getForObject(this.CAS_REST_API + "/users", List.class);
-		for(String user : users) {
-			LOGGER.info(user);
-		}
+		TreeMap usersTreeMap = this.restTemplate.getForObject(this.CAS_REST_API + "/users", TreeMap.class);
+		LOGGER.info(usersTreeMap);
 
-		model.addAttribute("users", users);
+		model.addAttribute("users", usersTreeMap);
 		return "adminIndex";
 	}
 
@@ -53,5 +64,14 @@ public class AdminInterfaceController {
 		this.restTemplate.delete(targetUrl, userId);
 
 		return "redirect:/admin?delete=true";
+	}
+
+	@RequestMapping(value = "/delete/{ticketId}", method = RequestMethod.GET)
+	public String printDelete(ModelMap model, @PathVariable String ticketId) {
+
+			String targetUrl = this.CAS_REST_API + "/ticket/{ticketId}/";
+			this.restTemplate.delete(targetUrl, ticketId);
+			return "redirect:/admin?delete=true";
+
 	}
 }
