@@ -83,21 +83,8 @@ public class AdminInterfaceController {
 		endPoint = endPoint < usersList.size() ? endPoint : usersList.size();
 		if(endPoint==usersList.size())endPoint-=1;
 		SortedMap<String,JsonTicket[]> target = new TreeMap<String,JsonTicket[]>();
-
-		LOGGER.info("page");
-		LOGGER.info(page);
-
-		LOGGER.info("pageNumber");
-		LOGGER.info(pageNumber);
-
-		LOGGER.info("endPoint");
-		LOGGER.info(endPoint);
-		
-		LOGGER.info("startPoint");
-		LOGGER.info(startPoint);
 		
 		if(endPoint<usersList.size() && startPoint<=endPoint ){
-			LOGGER.info("if(endPoint<usersList.size() && startPoint!=endPoint)");
 			target = usersTreeMap.subMap(usersList.get(startPoint),usersList.get(endPoint));
 		}
 
