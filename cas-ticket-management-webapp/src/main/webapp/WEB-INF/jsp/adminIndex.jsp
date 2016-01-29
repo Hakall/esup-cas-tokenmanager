@@ -1,6 +1,6 @@
 <jsp:directive.include file="includes/header.jsp" />
 
-	<h1><spring:message code="header.title"/> <small><spring:message code="header.title.admin"/></small></h1>
+	<h2><spring:message code="header.title"/> <small><spring:message code="header.title.admin"/></small></h2>
 	
 	<c:if test="${delete}">
 		<div class="modal fade" id="modal-delete"><div class="modal-dialog"><div class="modal-content">

@@ -18,4 +18,32 @@
 	<link href="<c:url value="/resources/css/token-manager.css" />" rel="stylesheet">
 </head>
 <body>
-	<section class="container">
+		<nav class="navbar navbar-fixed-top esupbar">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+			</div>
+
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="page-wrap">
+		<div class="container fill content">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="jumbotron banner">
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					
