@@ -29,9 +29,6 @@
 		</div></div></div>
 	</c:if>
 	<fieldset>
-		<legend>
-			<spring:message code="admin.field.users"/> : ${fn:length(users)}
-		</legend>
 		<c:choose>
 		<c:when test="${fn:length(users) eq 0}">
 		
