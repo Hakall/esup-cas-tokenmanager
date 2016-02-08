@@ -19,6 +19,8 @@
         http://www.springframework.org/schema/mvc/spring-mvc.xsd ">
 
  	<context:annotation-config />
+ 	<context:component-scan base-package="org.esupportail.cas.addon.model" />
+ 	<context:component-scan base-package="org.esupportail.cas.addon.service" />
 	<context:component-scan base-package="org.esupportail.cas.addon.controller" />
 	<cache:annotation-driven />
 		
@@ -95,6 +97,21 @@
 	
 	<mvc:resources mapping="/resources/**" location="/resources/themes/esup-theme/"  
 	cache-period="31556926"/>
+
+	<!-- Factory bean that creates the Mongo instance -->
+	<bean id="mongo" class="org.springframework.data.mongodb.core.MongoFactoryBean">
+		<property name="host" value="localhost" />
+	</bean>
+	
+	<!-- MongoTemplate for connecting and quering the documents in the database -->
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg name="mongo" ref="mongo" />
+		<constructor-arg name="databaseName" value="test" />
+	</bean>
+ 
+	<!-- Use this post processor to translate any MongoExceptions thrown in @Repository annotated classes -->
+	<bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+    
 
     <mvc:annotation-driven />
 
