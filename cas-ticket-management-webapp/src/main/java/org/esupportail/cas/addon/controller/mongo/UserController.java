@@ -9,11 +9,14 @@ import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import javax.annotation.PostConstruct;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.client.RestTemplate;
@@ -41,30 +44,26 @@ public class UserController {
     @Autowired
     private RestTemplate restTemplate;
 
-    private Boolean routine = false;
-    private Timer timer = new Timer();
-    private TimerTask task = new TimerTask()
+    static private Boolean routine = false;
+    static private Timer timer = new Timer();
+    static private TimerTask task = new TimerTask()
         {
             @Override
             public void run() 
             {
-                LOGGER.info("TimerTask !");
+                saveTickets();
             }   
         }; 
-
-    public UserController(){
-        routine();
-    }
    
 	@Autowired
 	private UserService userService;
 	
-    @RequestMapping(value = "/mongo/user", method = RequestMethod.GET)  
+    // @RequestMapping(value = "/mongo/user", method = RequestMethod.GET)  
 	public List<User> getUserList() {  
         return userService.listUser();  
     }  
     
-    @RequestMapping(value = "/mongo/user/save", method = RequestMethod.POST)  
+    // @RequestMapping(value = "/mongo/user/save", method = RequestMethod.POST)  
 	public void createUser(@ModelAttribute User user, ModelMap model) {
     	if(StringUtils.hasText(user.getUid())) {
     		userService.updateUser(user);
@@ -73,12 +72,12 @@ public class UserController {
     	}
     }
         
-    @RequestMapping(value = "/mongo/user/delete", method = RequestMethod.GET)  
+    // @RequestMapping(value = "/mongo/user/delete", method = RequestMethod.GET)  
 	public void deleteUser(@ModelAttribute User user, ModelMap model) {  
         userService.deleteUser(user);  
     }
 
-    @RequestMapping(value = "/mongo/tickets", method = RequestMethod.GET)
+    // @RequestMapping(value = "/mongo/tickets/save", method = RequestMethod.GET)
     public void saveTickets(){
         TreeMap<String,List<JsonTicket>> usersTreeMap = this.restTemplate.getForObject(this.CAS_REST_API + "/users", TreeMap.class);
         Set set=usersTreeMap.keySet();
@@ -87,7 +86,6 @@ public class UserController {
             if(mongoUser== null){
                 mongoUser = new User();
                 mongoUser.setUid(user.toString());
-                List<JsonTicket> tickets = usersTreeMap.get(user);
                 mongoUser.setTickets(usersTreeMap.get(user));
                 userService.addUser(mongoUser);
             }else{
@@ -98,9 +96,27 @@ public class UserController {
         }
     }
 
+    public void deleteUserTickets(String uid) {  
+       User mongoUser = userService.getUserByUid(uid);
+       if(mongoUser!=null){
+               mongoUser.setTickets(new ArrayList<JsonTicket>());
+               userService.updateUser(mongoUser);
+           }
+    }
+
+    // @RequestMapping(value = "/mongo/user/tickets", method = RequestMethod.GET)
+    public List<JsonTicket> getUserTickets(@RequestParam(value = "uid", required = true) String uid) {  
+       User mongoUser = userService.getUserByUid(uid);
+       if(mongoUser!=null){
+            return mongoUser.getTickets();
+           }
+        return null;
+    }
+
+    @PostConstruct
     public void routine() {
         if(!this.routine){
-            this.timer.scheduleAtFixedRate(task, 0, 1000*60*15);
+            this.timer.scheduleAtFixedRate(task, 0, 1000*60*7);
             this.routine =true;
         }
     }    
