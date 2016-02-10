@@ -1,5 +1,10 @@
 package org.esupportail.cas.addon.controller;
 
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
 import java.util.Arrays;
 
 import org.esupportail.cas.addon.model.JsonTicket;
@@ -16,6 +21,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
+import org.esupportail.cas.addon.model.mongo.User;
+import org.esupportail.cas.addon.service.UserService;
+import org.esupportail.cas.addon.model.mongo.Ticket;
+import org.esupportail.cas.addon.service.TicketService;
+
+
 import org.apache.log4j.Logger;
 
 @Controller
@@ -23,6 +34,12 @@ import org.apache.log4j.Logger;
 public class UserInterfaceController {
 
 	final static Logger LOGGER = Logger.getLogger(UserInterfaceController.class);
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private TicketService ticketService;
 
 	@Value("${server.api}")
 	private String CAS_REST_API;
@@ -47,7 +64,29 @@ public class UserInterfaceController {
 			@RequestParam(value = "page", required = false) Integer page) {
 
 		LOGGER.info("Access to ticket-manager");
+		Object[] listObj = getTickets().toArray();
+		Ticket[] listTicket = new Ticket[listObj.length];
+		for(int i=0; i < listTicket.length; i++)listTicket[i]=(Ticket) listObj[i];
+		for(int i=0; i < listTicket.length; i++)LOGGER.info(listTicket[i].getId());
+		LOGGER.info(listTicket.toString());
+
+		model.addAttribute("delete", delete);
+		model.addAttribute("expirationPolicyInSeconds", this.EXPIRATION_POLICY);
+		model.addAttribute("rememberMeExpirationPolicyInSeconds", this.REMEMBER_ME_EXPIRATION_POLICY);
+		model.addAttribute("activateIpGeolocation", this.ACTIVATE_IP_GEOLOCATION);
+		model.addAttribute("userTickets", listTicket);
+		model.addAttribute("pageTitle", "user.title");
+		return "newUserIndex";
+	}
+
+	@RequestMapping(value="/old", method = RequestMethod.GET)
+	public String printOldIndex(ModelMap model, @RequestParam(value = "delete", required = false) boolean delete,
+			@RequestParam(value = "page", required = false) Integer page) {
+
+		LOGGER.info("Access to ticket-manager");
 		JsonTicket[] listTicket = this.restTemplate.getForObject(this.CAS_REST_API + "/{user}/", JsonTicket[].class, this.getCurrentUser());
+		for(int i=0; i < listTicket.length; i++)LOGGER.info(listTicket[i].getId());
+		LOGGER.info(listTicket.toString());
 		int pageNumber = (int) Math.floor( listTicket.length / this.nbToDisplay );
 		if(page == null || page == 0) {
 			page = 0;
@@ -88,6 +127,7 @@ public class UserInterfaceController {
 
 			String targetUrl = this.CAS_REST_API + "/ticket/{ticketId}/";
 			this.restTemplate.delete(targetUrl, ticketId);
+			deleteTicket(ticketId);
 			return "redirect:/user?delete=true";
 		}
 		return "redirect:/user?delete=false";
@@ -98,5 +138,32 @@ public class UserInterfaceController {
 		String currentUser = user.getUsername();
 		return currentUser;
 	}
+
+    public List<Ticket> getTickets() {  
+       return ticketService.getTicketsByOwner(getCurrentUser());
+    }
+
+    public void deleteTickets() {  
+       User mongoUser = userService.getUserByUid(getCurrentUser());
+       if(mongoUser!=null){
+               mongoUser.setTickets(new ArrayList<String>());
+               userService.updateUser(mongoUser);
+           }
+       List<Ticket> usersTickets = ticketService.getTicketsByOwner(getCurrentUser());
+       for(Ticket ticket : usersTickets){
+       	ticketService.deleteTicket(ticket);
+       }
+    }
+
+    public void deleteTicket(String ticketId) {  
+    	User mongoUser = userService.getUserByUid(getCurrentUser());
+      	if(mongoUser!=null){
+               List<String> listTickets = mongoUser.getTickets();
+               listTickets.remove(ticketId);
+               mongoUser.setTickets(listTickets);
+               userService.updateUser(mongoUser);
+           }
+    	ticketService.deleteTicket(ticketService.getTicketById(ticketId));
+    }
 
 }

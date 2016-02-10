@@ -45,8 +45,13 @@ public class UserService {
 	public void deleteUser(User user) {
 		mongoTemplate.remove(user, COLLECTION_NAME);
 	}
+
+	public void drop() {
+		mongoTemplate.remove(new Query(), COLLECTION_NAME);
+	}
 	
 	public void updateUser(User user) {
-		mongoTemplate.insert(user, COLLECTION_NAME);		
+		deleteUser(user);
+		addUser(user);
 	}
 }

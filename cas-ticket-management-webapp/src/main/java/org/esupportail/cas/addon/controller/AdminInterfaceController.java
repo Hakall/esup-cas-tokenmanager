@@ -1,7 +1,9 @@
 package org.esupportail.cas.addon.controller;
 
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +24,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
+import org.esupportail.cas.addon.model.mongo.User;
+import org.esupportail.cas.addon.service.UserService;
+import org.esupportail.cas.addon.model.mongo.Ticket;
+import org.esupportail.cas.addon.service.TicketService;
+
+
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.apache.log4j.Logger;
 
 @Controller
@@ -28,6 +40,24 @@ import org.apache.log4j.Logger;
 public class AdminInterfaceController {
 
 	final static Logger LOGGER = Logger.getLogger(AdminInterfaceController.class);
+
+	static Boolean routine = false;
+    static Timer timer = new Timer();
+    private TimerTask task = new TimerTask()
+        {
+            @Override
+            public void run() 
+            {
+                saveTickets();
+                LOGGER.info("routine");
+            }   
+        }; 
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private TicketService ticketService;
 
 	@Value("${server.api}")
 	private String CAS_REST_API;
@@ -47,7 +77,16 @@ public class AdminInterfaceController {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(value="/activate", method = RequestMethod.GET)
+    public String runRoutine() {
+        if(!this.routine){
+            this.timer.scheduleAtFixedRate(task, 0, 1000*30);
+            this.routine =true;
+        }
+        return "/";
+    }  
+
+	@RequestMapping(value="/old", method = RequestMethod.GET)
 	public String printIndex(ModelMap model, @RequestParam(value = "delete", required = false) boolean delete,
 			@RequestParam(value = "page", required = false) Integer page) {
 		LOGGER.info("Access to admin-ticket-manager");
@@ -95,6 +134,24 @@ public class AdminInterfaceController {
 		return "adminIndex";
 	}
 
+	@RequestMapping(method = RequestMethod.GET)
+	public String printNewIndex(ModelMap model, @RequestParam(value = "delete", required = false) boolean delete,
+			@RequestParam(value = "page", required = false) Integer page) {
+		LOGGER.info("Access to admin-ticket-manager");
+		model.addAttribute("command", new TicketOwner());
+		model.addAttribute("delete", delete);
+		model.addAttribute("pageTitle", "admin.title");
+		model.addAttribute("expirationPolicyInSeconds", this.EXPIRATION_POLICY);
+		model.addAttribute("rememberMeExpirationPolicyInSeconds", this.REMEMBER_ME_EXPIRATION_POLICY);
+		model.addAttribute("activateIpGeolocation", this.ACTIVATE_IP_GEOLOCATION);
+
+		List<User> target = getUserList();
+		LOGGER.info(target.toString());
+
+		model.addAttribute("users", target);
+		return "newAdminIndex";
+	}
+
 	@RequestMapping(value="/deleteAll", method = RequestMethod.POST)
 	public String handleDeleteForm(@ModelAttribute("TicketOwner") TicketOwner ticketOwner, BindingResult result) {
 
@@ -114,4 +171,53 @@ public class AdminInterfaceController {
 			return "redirect:/admin?delete=true";
 
 	}
+
+	public List<User> getUserList() { 
+        return userService.listUser();  
+    }  
+
+    @RequestMapping(value="/saveTickets", method = RequestMethod.GET)
+    public void saveTickets(){
+    	LOGGER.info("public void saveTickets(){");
+    	userService.drop();
+    	ticketService.drop();
+        TreeMap<String,List<LinkedHashMap>> usersTreeMap = this.restTemplate.getForObject(this.CAS_REST_API + "/users", TreeMap.class);
+        Set set=usersTreeMap.keySet();
+        for(Object user : set){
+        	List<String> idsTickets = new ArrayList<String>();
+            List<LinkedHashMap> tickets = usersTreeMap.get(user);
+            for(int i=0;i<tickets.size();i++){
+            	LinkedHashMap ticket = tickets.get(i);
+            	Ticket mongoTicket = new Ticket();
+            	mongoTicket.setId(ticket.get("id").toString());
+            	idsTickets.add(ticket.get("id").toString());
+            	mongoTicket.setOwner(user.toString());
+            	mongoTicket.setCreationTime(Long.parseLong(ticket.get("creationTime").toString(), 14));
+            	mongoTicket.setLastTimeUsed(Long.parseLong(ticket.get("lastTimeUsed").toString(), 14));
+            	mongoTicket.setAuthenticationAttributes((Map<String,Object>)ticket.get("authenticationAttributes"));
+            	ticketService.addTicket(mongoTicket);
+            }
+            User mongoUser = new User();
+            mongoUser.setUid(user.toString());
+            mongoUser.setTickets(idsTickets);
+            userService.addUser(mongoUser);
+        }
+    }
+
+    public void deleteUserTickets(String uid) {  
+       User mongoUser = userService.getUserByUid(uid);
+       if(mongoUser!=null){
+               mongoUser.setTickets(new ArrayList<String>());
+               userService.updateUser(mongoUser);
+           }
+       List<Ticket> usersTickets = ticketService.getTicketsByOwner(uid);
+       for(Ticket ticket : usersTickets){
+       	ticketService.deleteTicket(ticket);
+       }
+    }
+
+    @RequestMapping(value="/getTickets", method = RequestMethod.GET)
+    public List<Ticket> getUserTickets(@RequestParam(value = "uid", required = true) String uid) {  
+        return ticketService.getTicketsByOwner(uid);
+    }
 }

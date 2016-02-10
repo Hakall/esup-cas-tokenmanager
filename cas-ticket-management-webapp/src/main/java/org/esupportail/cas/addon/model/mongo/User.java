@@ -2,7 +2,6 @@ package org.esupportail.cas.addon.model.mongo;
 
 import java.util.List;
 import java.util.ArrayList;
-import org.esupportail.cas.addon.model.JsonTicket;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -13,7 +12,7 @@ public class User {
 	@Id
 	private String uid;
 
-	private List<JsonTicket> tickets;
+	private List<String> tickets;
 	
 	public String getUid() {
 		return uid;
@@ -22,10 +21,10 @@ public class User {
 		this.uid = uid;
 	}
 
-	public List<JsonTicket> getTickets() {
+	public List<String> getTickets() {
 		return tickets;
 	}
-	public void setTickets(List<JsonTicket> tickets) {
+	public void setTickets(List<String> tickets) {
 		this.tickets = tickets;
 	}
 }
