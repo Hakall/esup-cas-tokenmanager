@@ -139,7 +139,9 @@ public class AdminInterfaceController {
 	// IF You Use a DB Service
 	@RequestMapping(method = RequestMethod.GET)
 	public String printNewIndex(ModelMap model, @RequestParam(value = "delete", required = false) boolean delete,
-			@RequestParam(value = "page", required = false) Integer page) {
+			@RequestParam(value = "page", required = false) Integer page,
+			 @RequestParam(value = "owner", required = false) String owner,
+			  @RequestParam(value = "userAgent", required = false) String userAgent) {
 		LOGGER.info("Access to admin-ticket-manager");
 		model.addAttribute("command", new TicketOwner());
 		model.addAttribute("delete", delete);
@@ -149,7 +151,20 @@ public class AdminInterfaceController {
 		model.addAttribute("activateIpGeolocation", this.ACTIVATE_IP_GEOLOCATION);
 		model.addAttribute("activate", this.routine);
 
-		List<User> users = getUserList();
+		List<String> criteria = new ArrayList<String>();
+		if(owner!=null){
+			if(!owner.equals(""))criteria.add("'owner' : {$regex: '.*"+owner+".*', $options: 'i'}");
+		}
+		if(userAgent!=null){
+			if(!userAgent.equals(""))criteria.add("'authenticationAttributes.userAgent' : {$regex: '.*"+userAgent+".*', $options: 'i'}");
+		}
+		List<User> users; 
+		List<Ticket> tickets = null;
+		if(criteria.size()>0){
+			tickets = getTicketListByCriteria(criteria); 
+			users = getUserListByTickets(tickets);
+		}
+		else users = getUserList();
 
 		if(users.size()>this.nbToDisplay){
 			int pageNumber = (int) Math.floor( users.size() / this.nbToDisplay );
@@ -175,9 +190,22 @@ public class AdminInterfaceController {
 			model.addAttribute("currentPage", page);
 		}
 
-		List<Ticket> tickets = new ArrayList<Ticket>();
-		for(User user : users){
-			tickets.addAll(getUserTickets(user.getUid()));
+		List<Ticket> resTickets = new ArrayList<Ticket>();
+		if(tickets==null){
+			tickets = new ArrayList<Ticket>();
+			for(User user : users){
+				tickets.addAll(getUserTickets(user.getUid()));
+			}
+		}else{
+			for(Ticket ticket : tickets){
+				for(User user : users){
+					if(user.getUid().equals(ticket.getOwner())){
+						resTickets.add(ticket);
+						break;
+					}
+				}
+			}
+			tickets = resTickets;
 		}
 
 		model.addAttribute("users", users);
@@ -208,6 +236,18 @@ public class AdminInterfaceController {
 
 	public List<User> getUserList() { 
         return userService.listUser();  
+    } 
+
+    public List<User> getUserListByTickets(List<Ticket> tickets) { 
+        List<User> users = new ArrayList<User>();
+        for(Ticket ticket : tickets){
+        	users.add(userService.getUserByUid(ticket.getOwner()));
+        }
+        return users;  
+    }
+
+    public List<Ticket> getTicketListByCriteria(List<String> criteria) { 
+        return ticketService.getTicketsByCriteria(criteria);  
     }  
 
     public List<Ticket> getTicketList() { 

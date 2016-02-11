@@ -43,6 +43,19 @@ public class TicketService {
 		List<Ticket> tickets = mongoTemplate.find(query, Ticket.class);
 		return tickets;
 	}
+
+	public List<Ticket> getTicketsByCriteria(List<String> criteria){
+		String queryStr = "{";
+		for(String critere : criteria){
+			queryStr+=critere;
+			queryStr+=",";
+		}
+		queryStr = queryStr.substring(0,queryStr.length()-1);
+		queryStr += "}";
+		BasicQuery query = new BasicQuery(queryStr);
+		List<Ticket> tickets = mongoTemplate.find(query, Ticket.class);
+		return tickets;
+	}
 	
 	public List<Ticket> listTicket() {
 		return mongoTemplate.findAll(Ticket.class, COLLECTION_NAME);
