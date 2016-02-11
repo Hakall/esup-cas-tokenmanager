@@ -67,8 +67,6 @@ public class UserInterfaceController {
 		Object[] listObj = getTickets().toArray();
 		Ticket[] listTicket = new Ticket[listObj.length];
 		for(int i=0; i < listTicket.length; i++)listTicket[i]=(Ticket) listObj[i];
-		for(int i=0; i < listTicket.length; i++)LOGGER.info(listTicket[i].getId());
-		LOGGER.info(listTicket.toString());
 
 		model.addAttribute("delete", delete);
 		model.addAttribute("expirationPolicyInSeconds", this.EXPIRATION_POLICY);
@@ -76,7 +74,7 @@ public class UserInterfaceController {
 		model.addAttribute("activateIpGeolocation", this.ACTIVATE_IP_GEOLOCATION);
 		model.addAttribute("userTickets", listTicket);
 		model.addAttribute("pageTitle", "user.title");
-		return "newUserIndex";
+		return "dbUserIndex";
 	}
 
 	@RequestMapping(value="/old", method = RequestMethod.GET)
@@ -85,8 +83,6 @@ public class UserInterfaceController {
 
 		LOGGER.info("Access to ticket-manager");
 		JsonTicket[] listTicket = this.restTemplate.getForObject(this.CAS_REST_API + "/{user}/", JsonTicket[].class, this.getCurrentUser());
-		for(int i=0; i < listTicket.length; i++)LOGGER.info(listTicket[i].getId());
-		LOGGER.info(listTicket.toString());
 		int pageNumber = (int) Math.floor( listTicket.length / this.nbToDisplay );
 		if(page == null || page == 0) {
 			page = 0;

@@ -49,7 +49,6 @@ public class AdminInterfaceController {
             public void run() 
             {
                 saveTickets();
-                LOGGER.info("routine");
             }   
         }; 
 
@@ -80,13 +79,16 @@ public class AdminInterfaceController {
 	@RequestMapping(value="/activate", method = RequestMethod.GET)
     public String runRoutine() {
         if(!this.routine){
-            this.timer.scheduleAtFixedRate(task, 0, 1000*30);
+        	userService.drop();
+        	ticketService.drop();
+            this.timer.scheduleAtFixedRate(task, 0, 1000*60*3);
             this.routine =true;
         }
-        return "/";
+        return "redirect:/admin";
     }  
 
-	@RequestMapping(value="/old", method = RequestMethod.GET)
+    // IF You Do Not Use a DB Service :Uncomment
+	// @RequestMapping(method = RequestMethod.GET)
 	public String printIndex(ModelMap model, @RequestParam(value = "delete", required = false) boolean delete,
 			@RequestParam(value = "page", required = false) Integer page) {
 		LOGGER.info("Access to admin-ticket-manager");
@@ -134,6 +136,7 @@ public class AdminInterfaceController {
 		return "adminIndex";
 	}
 
+	// IF You Use a DB Service
 	@RequestMapping(method = RequestMethod.GET)
 	public String printNewIndex(ModelMap model, @RequestParam(value = "delete", required = false) boolean delete,
 			@RequestParam(value = "page", required = false) Integer page) {
@@ -144,12 +147,42 @@ public class AdminInterfaceController {
 		model.addAttribute("expirationPolicyInSeconds", this.EXPIRATION_POLICY);
 		model.addAttribute("rememberMeExpirationPolicyInSeconds", this.REMEMBER_ME_EXPIRATION_POLICY);
 		model.addAttribute("activateIpGeolocation", this.ACTIVATE_IP_GEOLOCATION);
+		model.addAttribute("activate", this.routine);
 
-		List<User> target = getUserList();
-		LOGGER.info(target.toString());
+		List<User> users = getUserList();
 
-		model.addAttribute("users", target);
-		return "newAdminIndex";
+		if(users.size()>this.nbToDisplay){
+			int pageNumber = (int) Math.floor( users.size() / this.nbToDisplay );
+			if(page == null || page == 0) {
+				page = 0;
+			} else {
+				page--;
+			}
+
+			int startPoint = page * this.nbToDisplay;
+			int endPoint = startPoint + this.nbToDisplay;
+
+			if(startPoint > users.size()) {
+				page = pageNumber--;
+				startPoint = page * this.nbToDisplay;
+			}
+			endPoint = endPoint < users.size() ? endPoint : users.size();
+			if(endPoint==users.size() && endPoint>0)endPoint-=1;
+
+			users = users.subList(startPoint, endPoint);
+
+			model.addAttribute("pageNumber", pageNumber);
+			model.addAttribute("currentPage", page);
+		}
+
+		List<Ticket> tickets = new ArrayList<Ticket>();
+		for(User user : users){
+			tickets.addAll(getUserTickets(user.getUid()));
+		}
+
+		model.addAttribute("users", users);
+		model.addAttribute("tickets", tickets);
+		return "dbAdminIndex";
 	}
 
 	@RequestMapping(value="/deleteAll", method = RequestMethod.POST)
@@ -159,7 +192,7 @@ public class AdminInterfaceController {
 
 		String targetUrl = this.CAS_REST_API + "/userTickets/{userId}/";
 		this.restTemplate.delete(targetUrl, userId);
-
+		deleteUserTickets(userId);
 		return "redirect:/admin?delete=true";
 	}
 
@@ -168,6 +201,7 @@ public class AdminInterfaceController {
 
 			String targetUrl = this.CAS_REST_API + "/ticket/{ticketId}/";
 			this.restTemplate.delete(targetUrl, ticketId);
+			deleteTicket(ticketId);
 			return "redirect:/admin?delete=true";
 
 	}
@@ -176,19 +210,30 @@ public class AdminInterfaceController {
         return userService.listUser();  
     }  
 
+    public List<Ticket> getTicketList() { 
+        return ticketService.listTicket();  
+    }  
+
     @RequestMapping(value="/saveTickets", method = RequestMethod.GET)
     public void saveTickets(){
-    	LOGGER.info("public void saveTickets(){");
-    	userService.drop();
-    	ticketService.drop();
+    	LOGGER.info("Saving tickets...");
         TreeMap<String,List<LinkedHashMap>> usersTreeMap = this.restTemplate.getForObject(this.CAS_REST_API + "/users", TreeMap.class);
         Set set=usersTreeMap.keySet();
         for(Object user : set){
         	List<String> idsTickets = new ArrayList<String>();
             List<LinkedHashMap> tickets = usersTreeMap.get(user);
-            for(int i=0;i<tickets.size();i++){
+
+        	User mongoUser = userService.getUserByUid(user.toString());
+        	if(mongoUser!=null){
+        		userService.deleteUser(mongoUser);
+        	}
+        	for(int i=0;i<tickets.size();i++){
             	LinkedHashMap ticket = tickets.get(i);
-            	Ticket mongoTicket = new Ticket();
+            	Ticket mongoTicket = ticketService.getTicketById(ticket.get("id").toString());
+            	if(mongoTicket!=null){
+            		ticketService.deleteTicket(mongoTicket);
+            	}
+            	mongoTicket = new Ticket();
             	mongoTicket.setId(ticket.get("id").toString());
             	idsTickets.add(ticket.get("id").toString());
             	mongoTicket.setOwner(user.toString());
@@ -197,11 +242,12 @@ public class AdminInterfaceController {
             	mongoTicket.setAuthenticationAttributes((Map<String,Object>)ticket.get("authenticationAttributes"));
             	ticketService.addTicket(mongoTicket);
             }
-            User mongoUser = new User();
+            mongoUser = new User();
             mongoUser.setUid(user.toString());
             mongoUser.setTickets(idsTickets);
             userService.addUser(mongoUser);
         }
+        LOGGER.info("...Tickets saved");
     }
 
     public void deleteUserTickets(String uid) {  
@@ -216,7 +262,19 @@ public class AdminInterfaceController {
        }
     }
 
-    @RequestMapping(value="/getTickets", method = RequestMethod.GET)
+    public void deleteTicket(String ticketId) {
+    	Ticket mongoTicket = ticketService.getTicketById(ticketId);  
+    	User mongoUser = userService.getUserByUid(mongoTicket.getOwner());
+      	if(mongoUser!=null){
+               List<String> listTickets = mongoUser.getTickets();
+               listTickets.remove(ticketId);
+               mongoUser.setTickets(listTickets);
+               userService.updateUser(mongoUser);
+           }
+    	ticketService.deleteTicket(mongoTicket);
+    }
+
+    // @RequestMapping(value="/getTickets", method = RequestMethod.GET)
     public List<Ticket> getUserTickets(@RequestParam(value = "uid", required = true) String uid) {  
         return ticketService.getTicketsByOwner(uid);
     }
