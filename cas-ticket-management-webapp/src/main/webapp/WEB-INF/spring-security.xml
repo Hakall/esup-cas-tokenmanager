@@ -20,7 +20,7 @@
 	    <sec:intercept-url access="permitAll" pattern="/authorizationFailure"/>
 	   
 	    <sec:intercept-url access="isAuthenticated()" pattern="/user"/>
-	    <sec:intercept-url access="isAuthenticated() and hasRole('${security.adminRole}')" pattern="/admin"/>
+	    <sec:intercept-url access="isAuthenticated() and hasRole('${security.adminRole}')" pattern="/admin/**"/>
 	    <!-- <sec:intercept-url access="isAuthenticated()" pattern="/admin"/> -->
 	</sec:http>
 	
