@@ -42,15 +42,7 @@ public class AdminInterfaceController {
 	final static Logger LOGGER = Logger.getLogger(AdminInterfaceController.class);
 
 	static Boolean routine = false;
-    static Timer timer = new Timer();
-    private TimerTask task = new TimerTask()
-        {
-            @Override
-            public void run() 
-            {
-                saveTickets();
-            }   
-        }; 
+    public static Timer timer= new Timer();
 
 	@Autowired
 	private UserService userService;
@@ -81,10 +73,24 @@ public class AdminInterfaceController {
         if(!this.routine){
         	userService.drop();
         	ticketService.drop();
-            this.timer.scheduleAtFixedRate(task, 0, 1000*60*3);
             this.routine =true;
         }
+        routine();
         return "redirect:/admin";
+    }  
+
+    public void routine() {
+        TimerTask task = new TimerTask()
+        {
+            @Override
+            public void run() 
+            {
+                saveTickets();
+            }   
+        }; 
+        timer.cancel();
+        timer = new Timer();
+        timer.scheduleAtFixedRate(task, 0, 1000*60*3);
     }  
 
     // IF You Do Not Use a DB Service :Uncomment
