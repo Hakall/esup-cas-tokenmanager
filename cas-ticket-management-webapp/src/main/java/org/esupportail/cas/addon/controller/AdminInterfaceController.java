@@ -277,8 +277,8 @@ public class AdminInterfaceController {
             	mongoTicket.setId(ticket.get("id").toString());
             	idsTickets.add(ticket.get("id").toString());
             	mongoTicket.setOwner(user.toString());
-            	mongoTicket.setCreationTime(Long.parseLong(ticket.get("creationTime").toString(), 14));
-            	mongoTicket.setLastTimeUsed(Long.parseLong(ticket.get("lastTimeUsed").toString(), 14));
+            	mongoTicket.setCreationTime(Long.parseLong(ticket.get("creationTime").toString()));
+            	mongoTicket.setLastTimeUsed(Long.parseLong(ticket.get("lastTimeUsed").toString()));
             	mongoTicket.setAuthenticationAttributes((Map<String,Object>)ticket.get("authenticationAttributes"));
             	ticketService.addTicket(mongoTicket);
             }

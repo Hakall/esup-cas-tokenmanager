@@ -29,6 +29,22 @@
 		</div></div></div>
 	</c:if>
 	<fieldset>
+		<form action="admin" method="get">
+			<datalist id="agents">
+			    <option value="Internet Explorer">
+			    <option value="Firefox">
+			    <option value="Chrome">
+			    <option value="Opera">
+			    <option value="Safari">
+			    <option value="OS X">
+			    <option value="Windows">
+			    <option value="Android">
+			    <option value="Device">
+			  </datalist>
+			 <label>User Login: <input type="search" name="owner"></label>
+			 <label>Browser/Operating system: <input list="agents" type="search" name="userAgent"></label>
+			<input type="submit" value="Search...">
+		</form>
 		<c:if test="${!activate}">
 			<c:url value="/admin/activate" var="activateServiceUrl"/>
 			<a href="${activateServiceUrl}" class="btn btn-default">
@@ -183,30 +199,4 @@
 				</c:if>
 		</c:if>		
 	</fieldset>
-	<form:form method="post" action="admin/deleteAll" role="form">
-		
-		<fieldset>
-			<legend>
-				<spring:message code="admin.form.legend"/>
-			</legend>
-	
-			<p class="alert alert-warning alert-dismissable">
-				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-				<spring:message code="admin.form.alert"/>
-			</p>
-			
-			<div class="form-group">
-				<form:label path="owner">
-					<spring:message code="admin.form.label"/>
-				</form:label>
-			
-				<spring:message code="admin.form.placeholder" var="adminFormPlaceholder"/>
-				<form:input path="owner" placeholder="${adminFormPlaceHolder}" class="form-control" required="true"/>
-			</div>
-			<button type="submit" class="btn btn-danger">
-				<spring:message code="admin.form.submit.delete"/>
-			</button>
-		</fieldset>
-				
-	</form:form>
 <jsp:directive.include file="includes/footer.jsp" />

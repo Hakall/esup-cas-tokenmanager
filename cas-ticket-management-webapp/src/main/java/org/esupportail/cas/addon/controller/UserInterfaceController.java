@@ -59,6 +59,7 @@ public class UserInterfaceController {
 	@Autowired
 	private RestTemplate restTemplate;
 
+	// IF YOU USE A DATABASE SERVICE : comment
 	@RequestMapping(method = RequestMethod.GET)
 	public String printIndex(ModelMap model, @RequestParam(value = "delete", required = false) boolean delete,
 			@RequestParam(value = "page", required = false) Integer page) {
@@ -77,7 +78,8 @@ public class UserInterfaceController {
 		return "dbUserIndex";
 	}
 
-	@RequestMapping(value="/old", method = RequestMethod.GET)
+	// IF YOU DO NOT USE A DATABASE SERVICE : uncomment
+	// @RequestMapping(method = RequestMethod.GET)
 	public String printOldIndex(ModelMap model, @RequestParam(value = "delete", required = false) boolean delete,
 			@RequestParam(value = "page", required = false) Integer page) {
 
