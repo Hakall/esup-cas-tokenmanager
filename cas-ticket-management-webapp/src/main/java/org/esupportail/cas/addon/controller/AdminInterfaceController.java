@@ -260,7 +260,7 @@ public class AdminInterfaceController {
         return ticketService.listTicket();  
     }  
 
-    @RequestMapping(value="/saveTickets", method = RequestMethod.GET)
+    // @RequestMapping(value="/saveTickets", method = RequestMethod.GET)
     public void saveTickets(){
     	LOGGER.info("Saving tickets...");
         TreeMap<String,List<LinkedHashMap>> usersTreeMap = this.restTemplate.getForObject(this.CAS_REST_API + "/users", TreeMap.class);
